@@ -3,9 +3,12 @@
 use App\Http\Controllers\PaypalController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [PaypalController::class, 'showProducts'])->name('show.products');
+
 
 Route::get('handle-payment',[PaypalController::class,'handlepayment'])->name('make.payment');
 

@@ -71,12 +71,39 @@ class PaypalController extends Controller
     }
 
     }
-    public function paymentsuccess(Request $request){
-         $response= $this->provider->capturePaymentOrder($request->get('token'));
-         dd($response);
-    }
+
+    public function showProducts()
+{
+    $products = [
+        [
+            'name' => 'red tshirt',
+            'quantity' => 1,
+            'price' => 50.00,
+            'currency' => 'USD'
+        ],
+        [
+            'name' => 'blue tshirt',
+            'quantity' => 1,
+            'price' => 50.00,
+            'currency' => 'USD'
+        ],
+    ];
+
+    $total = array_reduce($products, function ($carry, $product) {
+        return $carry + ($product['price'] * $product['quantity']);
+    }, 0);
+
+    return view('welcome', compact('products', 'total'));
+}
+   public function paymentsuccess(Request $request){
+    $response = $this->provider->capturePaymentOrder($request->get('token'));
+    
+    // Assuming the payment is successful, show the success page
+    return view('payment-success', ['response' => $response]);
+}
 
     public function paymentfailed(){
-       dd('Your Payment has beend cancelled.Cancellation page goes here');
+    //    dd('Your Payment has beend cancelled.Cancellation page goes here');
+    return view('payment-failed');
     }
 }

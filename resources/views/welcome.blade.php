@@ -10,7 +10,38 @@
 <body>
     <div class="container mt-5 text-center">
         <h2>Laravel-Paypal</h2>
-        <a class="btn btn-primary" href="{{route('make.payment')}}">Pay $100 Via Paypal</a>
+
+        <!-- Products Table -->
+        <div class="mt-4">
+            <h4>Products</h4>
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Currency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($products as $product)
+                        <tr>
+                            <td>{{ $product['name'] }}</td>
+                            <td>{{ $product['quantity'] }}</td>
+                            <td>${{ number_format($product['price'], 2) }}</td>
+                            <td>{{ $product['currency'] }}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td colspan="2" class="text-end"><strong>Total</strong></td>
+                        <td colspan="2">${{ number_format($total, 2) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payment Button -->
+        <a class="btn btn-primary mt-3" href="{{ route('make.payment') }}">Pay ${{ number_format($total, 2) }} Via Paypal</a>
     </div>
 </body>
 </html>
