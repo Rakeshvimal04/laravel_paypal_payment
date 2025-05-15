@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
-
+use Illuminate\Support\Facades\Redirect;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PaypalController extends Controller
 {
@@ -60,14 +61,22 @@ class PaypalController extends Controller
     ];
 
     $response = $this->provider->createOrder($order);
-      dd($response);
+
+
+    try {
+        $approve_paypal_url = $response['links'][1]['href'];
+        return Redirect::to($approve_paypal_url);
+    } catch (\Throwable $th) {
+        dd($th->getMessage(),$response);
+    }
 
     }
-    public function paymentsuccess(){
-
+    public function paymentsuccess(Request $request){
+         $response= $this->provider->capturePaymentOrder($request->get('token'));
+         dd($response);
     }
 
     public function paymentfailed(){
-
+       dd('Your Payment has beend cancelled.Cancellation page goes here');
     }
 }
